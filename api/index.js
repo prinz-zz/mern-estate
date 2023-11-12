@@ -7,7 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
-const app = express();
+const app = express(); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("common"));

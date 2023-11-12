@@ -15,7 +15,7 @@ export default function Header() {
         <form className="bg-slate-100 p-3 rounded-lg flex justify-between items-center">
           <input
             type="text"
-            className="bg-transparent focus:outline-none w-24 sm:w-24"
+            className="bg-transparent focus:outline-none w-24 sm:w-64"
             placeholder="Search..."
           />
           <FiSearch className="text-slate-500" />
@@ -32,7 +32,7 @@ export default function Header() {
               About
             </li>
           </Link>
-          <Link to="signIn">
+          <Link to="/signIn">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Sign In
             </li>
