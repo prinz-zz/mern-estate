@@ -16,20 +16,19 @@ export default function SignUp() {
     });
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-        setLoading(true);
-        const res = await axios.post('/api/auth/signUp', formData);
-        const data = res.data;
-        console.log(data);
-        setLoading(false);
-        setError(null);
-        navigate('/signIn')
-    }catch(error){
-        setLoading(false);
-        setError(error.message);
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/auth/signUp", formData);
+      const data = res.data;
+      console.log(data);
+      setLoading(false);
+      setError(null);
+      navigate("/signIn");
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
     }
   };
 
@@ -61,20 +60,21 @@ export default function SignUp() {
           className="border p-3 rounded-xl focus:outline-none"
           onChange={handleChange}
         />
-        <button disabled={loading}
+        <button
+          disabled={loading}
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
-          {loading ? 'Loading...' : 'Sign Up' }
+          {loading ? "Loading..." : "Sign Up"}
         </button>
       </form>
       <div className="my-3">
         <p>
-          Have an account?{" "}
+          Have an account?
           <Link to="/signIn" className="text-blue-700">
             Sign In
           </Link>
         </p>
-        {error && <p className='text-red-500 mt-5'>{error}</p>}
+        {error && <p className="text-red-500 mt-5">{error}</p>}
       </div>
     </div>
   );

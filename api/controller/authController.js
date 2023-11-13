@@ -1,6 +1,9 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import { errorHandler } from "../middlewares/errorHandler.js";
+import { genTokenAndSetCookie } from "../utils/genTokenAndSetCookie.js";
 
+////////////////////////////////SignUp
 export const signUp = async (req, res, next) => {
   const { username, email, password } = req.body;
 
@@ -24,6 +27,30 @@ export const signUp = async (req, res, next) => {
       password: hashPassword,
     });
     res.status(201).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/////////////////////////////SignIn
+export const signIn = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  //if user exists
+  const user = await User.findOne({ email });
+  const comparePassword = await bcrypt.compare(password, user.password);
+  if (!user) {
+    res.status(404).json("User not found");
+  }
+  if (!comparePassword) {
+    res.status(400).json("Wrong credentials");
+  }
+  if(user){
+    genTokenAndSetCookie(res, user._id)
+    res.status(200).json(user);
+  }
+
+  try {
   } catch (error) {
     next(error);
   }
