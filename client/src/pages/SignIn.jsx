@@ -2,11 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInError } from '../redux/userSlice.js';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const { error, loading } = useSelector((state)=> state.user)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     //e.preventDefault();
@@ -19,15 +22,14 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signInStart())
       const res = await axios.post("/api/auth/signIn", formData);
       const data = res.data;
       console.log(data);
-      setLoading(false);      
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      toast.error(error?.response?.data?.message)
+      dispatch(signInError(toast.error(error?.response?.data?.message)))
     }
   };
 
