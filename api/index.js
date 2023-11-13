@@ -14,6 +14,7 @@ app.use(morgan("common"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+// app.use("/google");
 
 app.use(errorHandler);
 

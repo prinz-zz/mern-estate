@@ -59,3 +59,26 @@ export const signIn = async (req, res, next) => {
     
   }
 };
+
+
+/////////////////////////////Google
+// export const google = async (req, res, next) => {
+//   try {
+//     const user = await User.findOne({email: req.body.email});
+
+//     if(user){
+//       genTokenAndSetCookie(res, user._id);
+//       res.status(200).json({
+//         id: user._id,
+//         username: user.username,
+//         email: user.email,
+//       });
+//     }else {
+//       const generatePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+//       const hashedPassword = await bcrypt.hash(generatePassword, 10)
+//     }
+
+//   } catch (error) {
+//     next(error);
+//   }
+// }

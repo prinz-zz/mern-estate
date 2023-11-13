@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInError } from '../redux/userSlice.js';
+import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -24,7 +25,7 @@ export default function SignIn() {
     try {
       dispatch(signInStart())
       const res = await axios.post("/api/auth/signIn", formData);
-      const data = res.data;
+      const data = await res.data;
       console.log(data);
       dispatch(signInSuccess(data));
       navigate("/");
@@ -61,6 +62,7 @@ export default function SignIn() {
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
           {loading ? "Loading..." : "Sign In"}
         </button>
+        {/* <OAuth /> */}
       </form>
       <div className="my-3">
         <p>

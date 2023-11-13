@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import OAuth from '../components/OAuth';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -21,7 +22,7 @@ export default function SignUp() {
     try {
       setLoading(true);
       const res = await axios.post("/api/auth/signUp", formData);
-      const data = res.data;
+      const data = await res.data;
       console.log(data);
       setLoading(false);
       navigate("/signIn");
@@ -68,6 +69,7 @@ export default function SignUp() {
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
           {loading ? "Loading..." : "Sign Up"}
         </button>
+        {/* <OAuth/> */}
       </form>
       <div className="my-3">
         <p>
