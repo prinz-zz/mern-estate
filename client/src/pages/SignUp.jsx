@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,11 +24,10 @@ export default function SignUp() {
       const data = res.data;
       console.log(data);
       setLoading(false);
-      setError(null);
       navigate("/signIn");
     } catch (error) {
       setLoading(false);
-      setError(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -42,6 +41,7 @@ export default function SignUp() {
           id="username"
           placeholder="Username"
           className="border p-3 rounded-xl focus:outline-none"
+          required
           onChange={handleChange}
         />
         <input
@@ -50,6 +50,7 @@ export default function SignUp() {
           id="email"
           placeholder="Email"
           className="border p-3 rounded-xl focus:outline-none"
+          required
           onChange={handleChange}
         />
         <input
@@ -58,6 +59,7 @@ export default function SignUp() {
           id="password"
           placeholder="Password"
           className="border p-3 rounded-xl focus:outline-none"
+          required
           onChange={handleChange}
         />
         <button
@@ -70,11 +72,10 @@ export default function SignUp() {
       <div className="my-3">
         <p>
           Have an account?
-          <Link to="/signIn" className="text-blue-700">
+          <Link to="/signIn" className="text-blue-700 ml-1">
             Sign In
           </Link>
         </p>
-        {error && <p className="text-red-500 mt-5">{error}</p>}
       </div>
     </div>
   );
