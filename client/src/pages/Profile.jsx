@@ -1,10 +1,93 @@
+import { useRef, useState, useEffect } from "react";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+import { app } from "../firebase.js";
+
 export default function Profile() {
+  const fileRef = useRef(null);
   const handleChange = () => {};
+  const [file, setFile] = useState(null);
+  const [filePercent, setFilePercent] = useState(0);
+  const [fileUploadError, setFileUploadError] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  console.log(file);
+  console.log(filePercent);
+  console.log(formData);
+
+  useEffect(() => {
+    if (file) {
+      handleFileUpload(file);
+    }
+  }, [file]);
+
+  const handleFileUpload = (file) => {
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePercent(Math.round(progress));
+      },
+      (error) => {
+        setFileUploadError(true);
+      },
+      () => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          setFormData({ ...formData, avatar: downloadURL });
+        });
+      }
+    );
+  };
 
   return (
     <div className="p3 max-w-lg mx-auto">
       <div className="text-3xl font-semibold text-center my-10 ">Profile</div>
       <form className="flex flex-col gap-7">
+        <input
+          type="file"
+          ref={fileRef}
+          hidden
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
+        <img
+          src={formData.avatar || "https://cdn.pixabay.com/photo/2023/08/15/09/21/camera-8191564_1280.jpg"}
+          alt="profile"
+          className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
+          id="img-upload"
+          onClick={() => fileRef.current.click()}
+        />
+
+
+        <div className="text-center">
+        {fileUploadError ? (
+           <span className="text-red-700">
+            Upload error (Image must be less than 2 MB)
+            </span>
+        ) : filePercent > 0 && filePercent < 100 ? (
+           <span className="text-slate=700">{`Uploading ${filePercent}%`}</span>
+        ) : filePercent === 100 ? (
+           <span className="text-green-700">Upload Sucessfull</span>
+        ) : (
+           ''
+        )}
+        </div>
+
+
         <input
           type="username"
           name="username"
