@@ -1,7 +1,12 @@
 import { FiSearch } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Header() {
+  const {currentUser} = useSelector((state)=> state.user)
+    console.log(currentUser);
+
+
   return (
     <header className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
@@ -37,16 +42,20 @@ export default function Header() {
               Profile
             </li>
           </Link>
-          <Link to="/signIn">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              Sign In
-            </li>
-          </Link>
-          <Link to="/">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              Logout
-            </li>
-          </Link>
+          {currentUser ? (
+            <Link to="/">
+              <li className="hidden sm:inline text-slate-700 hover:underline">
+                Logout
+              </li>
+            </Link>
+          ) : (
+            <Link to="/signIn">
+              <li className="hidden sm:inline text-slate-700 hover:underline">
+                Sign In
+              </li>
+            </Link>
+          )}
+          
         </ul>
       </div>
     </header>
