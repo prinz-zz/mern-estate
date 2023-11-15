@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { errorMessage } from "../utils/error.js";
 import { genTokenAndSetCookie } from "../utils/genTokenAndSetCookie.js";
@@ -8,7 +8,7 @@ export const signUp = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    res.status(401).json("All fields are required");
+    return next(errorMessage(401, "All fields are required"));
   }
 
   //   //if user exists
