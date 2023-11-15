@@ -1,4 +1,7 @@
 import { useRef, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from 'react-toastify';
+import axios from 'axios';
 import {
   getStorage,
   ref,
@@ -6,18 +9,26 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../firebase.js";
+import {
+  updateUserStart,
+  updatedUserSuccess,
+  updatedUserError,
+} from "../redux/userSlice.js";
 
 export default function Profile() {
+  const { currentUser } = useSelector((state) => state.user);
   const fileRef = useRef(null);
-  const handleChange = () => {};
+
   const [file, setFile] = useState(null);
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const dispatch =  useDispatch();
 
   console.log(file);
   console.log(filePercent);
-  console.log(formData);
+  console.log(formData.avatar);
+  console.log(currentUser.id);
 
   useEffect(() => {
     if (file) {
@@ -53,10 +64,28 @@ export default function Profile() {
     );
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart())
+      const res = await axios.put(`/api/user/update/${currentUser.id}`, formData);
+      const data = await res.data;
+      console.log(data);
+      dispatch(updatedUserSuccess(data));
+
+    } catch (error) {
+      dispatch(updatedUserError(toast.error(error?.response?.data?.message)))
+    }
+  };
+
   return (
     <div className="p3 max-w-lg mx-auto">
       <div className="text-3xl font-semibold text-center my-10 ">Profile</div>
-      <form className="flex flex-col gap-7">
+      <form onSubmit={handleUpload} className="flex flex-col gap-7">
         <input
           type="file"
           ref={fileRef}
@@ -65,36 +94,36 @@ export default function Profile() {
           onChange={(e) => setFile(e.target.files[0])}
         />
         <img
-          src={formData.avatar || "https://cdn.pixabay.com/photo/2023/08/15/09/21/camera-8191564_1280.jpg"}
+          src={
+            formData.avatar || currentUser.avatar
+          }
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
           id="img-upload"
           onClick={() => fileRef.current.click()}
         />
 
-
         <div className="text-center">
-        {fileUploadError ? (
-           <span className="text-red-700">
-            Upload error (Image must be less than 2 MB)
+          {fileUploadError ? (
+            <span className="text-red-700">
+              Upload error (Image must be less than 2 MB)
             </span>
-        ) : filePercent > 0 && filePercent < 100 ? (
-           <span className="text-slate=700">{`Uploading ${filePercent}%`}</span>
-        ) : filePercent === 100 ? (
-           <span className="text-green-700">Upload Sucessfull</span>
-        ) : (
-           ''
-        )}
+          ) : filePercent > 0 && filePercent < 100 ? (
+            <span className="text-slate=700">{`Uploading ${filePercent}%`}</span>
+          ) : filePercent === 100 ? (
+            <span className="text-green-700">Upload Sucessfull</span>
+          ) : (
+            ""
+          )}
         </div>
-
 
         <input
           type="username"
           name="username"
           id="username"
           placeholder="Username"
+          defaultValue={currentUser.username}
           className="border p-3 rounded-xl focus:outline-none"
-          required
           onChange={handleChange}
         />
         <input
@@ -102,8 +131,8 @@ export default function Profile() {
           name="email"
           id="email"
           placeholder="Email"
+          defaultValue={currentUser.email}
           className="border p-3 rounded-xl focus:outline-none"
-          required
           onChange={handleChange}
         />
         <input
@@ -112,7 +141,6 @@ export default function Profile() {
           id="password"
           placeholder="Password"
           className="border p-3 rounded-xl focus:outline-none"
-          required
           onChange={handleChange}
         />
         <button

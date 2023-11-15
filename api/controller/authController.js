@@ -46,12 +46,15 @@ export const signIn = async (req, res, next) => {
     if (!comparePassword) {
       return next(errorMessage(400, "Wrong credentials"));
     }
+
+
     if (user) {
       genTokenAndSetCookie(res, user._id);
       res.status(200).json({
         id: user._id,
         username: user.username,
         email: user.email,
+        avatar: user.avatar,
       });
     }
   } catch (error) {

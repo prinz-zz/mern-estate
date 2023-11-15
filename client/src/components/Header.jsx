@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function Header() {
-  const {currentUser} = useSelector((state)=> state.user)
+  const {currentUser} = useSelector((state)=> state?.user)
     console.log(currentUser);
 
 
@@ -43,12 +43,12 @@ export default function Header() {
             </li>
           </Link>
           {currentUser ? (
-            <Link to="/">
-              <li className="hidden sm:inline text-slate-700 hover:underline">
-                Logout
-              </li>
-            </Link>
-          ) : (
+              <img
+                className='rounded-full h-7 w-7 object-cover'
+                src={currentUser.avatar}
+                alt='profile'
+              />
+            )  : (
             <Link to="/signIn">
               <li className="hidden sm:inline text-slate-700 hover:underline">
                 Sign In
