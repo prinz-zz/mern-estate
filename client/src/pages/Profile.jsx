@@ -13,6 +13,9 @@ import {
   updateUserStart,
   updatedUserSuccess,
   updatedUserError,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserError
 } from "../redux/userSlice.js";
 
 export default function Profile() {
@@ -78,6 +81,18 @@ export default function Profile() {
       dispatch(updatedUserError(toast.error(error?.response?.data?.message)))
     }
   };
+
+  const handleDelete = async (e) => {
+    try{
+      dispatch(deleteUserStart())
+      const res = await axios.delete(`/api/user/delete/${currentUser.id}`);
+      const data = await res.data;
+      dispatch(deleteUserSuccess(data));
+      toast.success('User deleted successfully')
+    }catch(error) {
+      dispatch(deleteUserError(toast.error(error?.response?.data?.message)))
+    }
+  }
 
   return (
     <div className="p3 max-w-lg mx-auto">
@@ -152,7 +167,7 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between my-5 ">
-        <span className="text-red-700 cursor-pointer">Delete Account</span>
+        <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete Account</span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
     </div>
