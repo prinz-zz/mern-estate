@@ -1,4 +1,72 @@
+import { useState } from "react";
+import { app } from "../firebase.js";
+import { toast } from "react-toastify";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
+
 export default function CreateListing() {
+  const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [imgUploadError, setImgUploadError] = useState(false);
+
+  console.log(formData);
+
+  //////////////
+  const handleImageUpload = (e) => {
+    if (files.length > 0 && files.length < 7) {
+      const promises = [];
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
+
+      Promise.all(promises).then((urls) => {
+        setFormData({
+          ...formData,
+          imageUrls: formData.imageUrls.concat(urls),
+        });
+        setImgUploadError(false);
+      }).catch((error) => {
+        setImgUploadError(toast.error('Image upload failed (2mb max per image)'));
+      });
+      
+    }
+  };
+
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress);
+        },
+        (error) => {
+          reject(error);
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7 ">
@@ -117,14 +185,19 @@ export default function CreateListing() {
               id="images"
               accept="images/*"
               multiple
+              onChange={(e) => setFiles(e.target.files)}
             />
-            <button className="border border-green-600 text-green-700 p-3 rounded-lg uppercase hover:text-white hover:bg-green-800">
+            <button
+              type="button"
+              onClick={handleImageUpload}
+              className="border border-green-600 text-green-700 p-3 rounded-lg uppercase hover:text-white hover:bg-green-800">
               Upload
             </button>
           </div>
-          <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 text-center disabled:opacity-75">Create Listing</button>
+          <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 text-center disabled:opacity-75">
+            Create Listing
+          </button>
         </div>
-        
       </form>
     </main>
   );
