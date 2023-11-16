@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   getStorage,
@@ -110,7 +111,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="p3 max-w-lg mx-auto">
+    <div className="p-3 max-w-lg mx-auto">
       <div className="text-3xl font-semibold text-center my-10 ">Profile</div>
       <form onSubmit={handleUpload} className="flex flex-col gap-7">
         <input
@@ -143,7 +144,7 @@ export default function Profile() {
         </div>
 
         <input
-          type="username"
+          type="text"
           name="username"
           id="username"
           placeholder="Username"
@@ -173,11 +174,10 @@ export default function Profile() {
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
           {loading ? "Loading..." : "Update"}
         </button>
-        <button
-          type="submit"
-          className="bg-green-600 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
-          Create Listing
-        </button>
+        <Link to="/create-listing" 
+          className="bg-green-600 text-white p-3 rounded-lg uppercase hover:opacity-95 text-center disabled:opacity-75">
+          Create Listing 
+        </Link>
       </form>
       <div className="flex justify-between my-5 ">
         <span onClick={handleDelete} className="text-red-700 cursor-pointer">
