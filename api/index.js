@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { dbConnection } from "./dbConnection/dbConnection.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import listingRoutes from "./routes/listingRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
 
@@ -17,6 +18,8 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes); 
+app.use("/api/listing", listingRoutes); 
+
 // app.use("/google");
 
 
