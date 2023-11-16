@@ -7,4 +7,5 @@ import { verifyToken } from '../utils/verifyToken.js';
 router.put("/update/:id", verifyToken, updateUser);
 router.delete("/delete/:id", verifyToken, deleteUser);
 
+
 export default router;

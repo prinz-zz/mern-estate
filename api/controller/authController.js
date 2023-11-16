@@ -39,14 +39,16 @@ export const signIn = async (req, res, next) => {
   try {
     //if user exists
     const user = await User.findOne({ email });
-    const comparePassword = await bcrypt.compare(password, user?.password || '');
+    const comparePassword = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
     if (!user) {
       return next(errorMessage(404, "User not found"));
     }
     if (!comparePassword) {
       return next(errorMessage(400, "Wrong credentials"));
     }
-
 
     if (user) {
       genTokenAndSetCookie(res, user._id);
@@ -59,10 +61,21 @@ export const signIn = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
-    
   }
 };
 
+///////////////signOut
+export const signOut = async (req, res, next) => {
+  try {
+    res.cookie("jwt_access", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    res.status(200).json({ message: "user logged out" });
+  } catch (error) {
+    next(error);
+  }
+};
 
 /////////////////////////////Google
 // export const google = async (req, res, next) => {

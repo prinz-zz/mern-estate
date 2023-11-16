@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import { toast } from "react-toastify";
+import axios from "axios";
 import {
   getStorage,
   ref,
@@ -15,7 +15,10 @@ import {
   updatedUserError,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserError
+  deleteUserError,
+  signoutUserStart,
+  signoutUserSuccess,
+  signoutUserError,
 } from "../redux/userSlice.js";
 
 export default function Profile() {
@@ -26,8 +29,7 @@ export default function Profile() {
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const dispatch =  useDispatch();
-
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (file) {
@@ -70,29 +72,42 @@ export default function Profile() {
   const handleUpload = async (e) => {
     e.preventDefault();
     try {
-      dispatch(updateUserStart())
-      const res = await axios.put(`/api/user/update/${currentUser.id}`, formData);
+      dispatch(updateUserStart());
+      const res = await axios.put(
+        `/api/user/update/${currentUser.id}`,
+        formData
+      );
       const data = await res.data;
       console.log(data);
       dispatch(updatedUserSuccess(data));
-      toast.success('User updated successfully')
-
+      toast.success("User updated successfully");
     } catch (error) {
-      dispatch(updatedUserError(toast.error(error?.response?.data?.message)))
+      dispatch(updatedUserError(toast.error(error?.response?.data?.message)));
     }
   };
 
   const handleDelete = async (e) => {
-    try{
-      dispatch(deleteUserStart())
+    try {
+      dispatch(deleteUserStart());
       const res = await axios.delete(`/api/user/delete/${currentUser.id}`);
       const data = await res.data;
       dispatch(deleteUserSuccess(data));
-      toast.success('User deleted successfully')
-    }catch(error) {
-      dispatch(deleteUserError(toast.error(error?.response?.data?.message)))
+      toast.success("User deleted successfully");
+    } catch (error) {
+      dispatch(deleteUserError(toast.error(error?.response?.data?.message)));
     }
-  }
+  };
+
+  const handleSignout = async (e) => {
+    try {
+      dispatch(signoutUserStart());
+      const res = await axios.post("/api/auth/signout");
+      const data = await res.data;
+      dispatch(signoutUserSuccess(data));
+    } catch (error) {
+      dispatch(signoutUserError(toast.error(error?.response?.data?.message)));
+    }
+  };
 
   return (
     <div className="p3 max-w-lg mx-auto">
@@ -106,9 +121,7 @@ export default function Profile() {
           onChange={(e) => setFile(e.target.files[0])}
         />
         <img
-          src={
-            formData.avatar || currentUser.avatar
-          }
+          src={formData.avatar || currentUser.avatar}
           alt="profile"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
           id="img-upload"
@@ -158,7 +171,7 @@ export default function Profile() {
         <button
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
-          { loading ? 'Loading...' : 'Update' }
+          {loading ? "Loading..." : "Update"}
         </button>
         <button
           type="submit"
@@ -167,8 +180,12 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between my-5 ">
-        <span onClick={handleDelete} className="text-red-700 cursor-pointer">Delete Account</span>
-        <span className="text-red-700 cursor-pointer">Sign Out</span>
+        <span onClick={handleDelete} className="text-red-700 cursor-pointer">
+          Delete Account
+        </span>
+        <span onClick={handleSignout} className="text-red-700 cursor-pointer">
+          Sign Out
+        </span>
       </div>
     </div>
   );
