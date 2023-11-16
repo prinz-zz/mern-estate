@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 
 export const updateUser = async (req, res, next) => {
-  if (req.user.id !== req.params.id) return next(errorMessage(401, "Unauthorized"));
+  if (req.user.id !== req.params.id)
+    return next(errorMessage(401, "You can only update  your own account "));
 
   try {
     if (req.body.password) {

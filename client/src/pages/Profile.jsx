@@ -16,7 +16,7 @@ import {
 } from "../redux/userSlice.js";
 
 export default function Profile() {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
 
   const [file, setFile] = useState(null);
@@ -25,10 +25,6 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const dispatch =  useDispatch();
 
-  console.log(file);
-  console.log(filePercent);
-  console.log(formData.avatar);
-  console.log(currentUser.id);
 
   useEffect(() => {
     if (file) {
@@ -76,6 +72,7 @@ export default function Profile() {
       const data = await res.data;
       console.log(data);
       dispatch(updatedUserSuccess(data));
+      toast.success('User updated successfully')
 
     } catch (error) {
       dispatch(updatedUserError(toast.error(error?.response?.data?.message)))
@@ -146,7 +143,7 @@ export default function Profile() {
         <button
           type="submit"
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
-          Update
+          { loading ? 'Loading...' : 'Update' }
         </button>
         <button
           type="submit"
