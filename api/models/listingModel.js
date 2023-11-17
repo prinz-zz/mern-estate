@@ -15,6 +15,14 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
+    userRef: {
+      type: String,
+      required: true,
+    },
     regularPrice: {
       type: Number,
       required: true,
@@ -39,20 +47,12 @@ const listingSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    type: {
-      type: String,
-      required: true,
-    },
     offer: {
-      type: String,
+      type: Boolean,
       required: true,
     },
     imageUrls: {
       type: Array,
-      required: true,
-    },
-    userRef: {
-      type: String,
       required: true,
     },
   },

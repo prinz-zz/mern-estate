@@ -43,11 +43,18 @@ export default function Header() {
             </li>
           </Link>
           {currentUser ? (
+            <>
+            <Link to="/signIn">
+            <li className="hidden sm:inline text-slate-700 hover:underline">
+              Sign Out
+            </li>
+          </Link>
               <img
                 className='rounded-full h-7 w-7 object-cover'
                 src={currentUser.avatar}
                 alt='profile'
               />
+              </>
             )  : (
             <Link to="/signIn">
               <li className="hidden sm:inline text-slate-700 hover:underline">
