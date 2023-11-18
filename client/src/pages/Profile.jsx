@@ -27,7 +27,7 @@ import {
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
-
+  
   const [file, setFile] = useState(null);
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
@@ -123,6 +123,20 @@ export default function Profile() {
       toast.error(error?.response?.data?.message);
     }
   };
+
+  const handleListEdit = async () => {
+
+  }
+  const handleListDelete = async (listingId) => {
+      
+    try {
+      const res = await axios.delete(`/api/listing/delete/${listingId}`);
+      setUserListings((prev) => prev.filter((listing) => listing.id !== listingId))
+      toast.success("Listing deleted Successfully");
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -225,10 +239,10 @@ export default function Profile() {
               <p>{list.name}</p>
             </Link>
             <div className="flex flex-col items-center gap-4">
-              <button>
+              <button onClick={handleListEdit}>
                 <FaEdit className="text-green-700" />
               </button>
-              <button>
+              <button onClick={()=> handleListDelete(list._id)}>
                 <FaTrash className="text-red-700" />
               </button>
             </div>
