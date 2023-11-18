@@ -1,6 +1,7 @@
 import { errorMessage } from "../utils/error.js";
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
+import Listing from "../models/listingModel.js";
 
 ///////////////UPDATE USER
 export const updateUser = async (req, res, next) => {
@@ -39,13 +40,24 @@ export const deleteUser = async (req, res, next) => {
   }
 
   try {
-    await User.findByIdAndDelete(req.params.id,)
-    res.clearCookie('jwt_access')
-    res.status(200).json('User deleted successfully')
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie("jwt_access");
+    res.status(200).json("User deleted successfully");
   } catch (error) {
-    next(error)
+    next(error);
   }
-
 };
 
-
+////////////////////////////getUserListings/////////////////
+export const getUserListings = async (req, res, next) => {
+  if (req.user.id === req.params.id) {
+    try {
+      const listings = await Listing.find({ userRef: req.params.id });
+      res.json(listings);
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorMessage(401, "You can only view your own listings "));
+  }
+};
