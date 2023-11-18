@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { FaEdit } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import axios from "axios";
 import {
   getStorage,
@@ -30,6 +32,7 @@ export default function Profile() {
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -110,6 +113,17 @@ export default function Profile() {
     }
   };
 
+  const handleShowListings = async () => {
+    try {
+      const res = await axios.get(`/api/user/listings/${currentUser.id}`);
+      const data = await res.data;
+      console.log(data);
+      setUserListings(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <div className="text-3xl font-semibold text-center my-10 ">Profile</div>
@@ -174,9 +188,10 @@ export default function Profile() {
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-75">
           {loading ? "Loading..." : "Update"}
         </button>
-        <Link to="/create-listing" 
+        <Link
+          to="/create-listing"
           className="bg-green-600 text-white p-3 rounded-lg uppercase hover:opacity-95 text-center disabled:opacity-75">
-          Create Listing 
+          Create Listing
         </Link>
       </form>
       <div className="flex justify-between my-5 ">
@@ -187,6 +202,42 @@ export default function Profile() {
           Sign Out
         </span>
       </div>
+      <button onClick={handleShowListings} className="text-green-700 w-full">
+        Show Listings
+      </button>
+      {userListings &&
+        userListings.length > 0 &&
+        
+        <div className=''>
+          <h1 className="text-center mt-7 text-2xl font-semibold">Your Listings</h1>
+        {userListings.map((list) => (
+          <div
+            className="my-3 p-3 flex justify-between items-center border rounded-lg border-slate-300"
+            key={list._id}>
+            <Link
+              to={`/listing/${list._id}`}
+              className="flex justify-between items-center">
+              <img
+                src={list.imageUrls[0]}
+                alt="listing image"
+                className="w-16 h-16 object-contain rounded-lg"
+              />
+              <p>{list.name}</p>
+            </Link>
+            <div className="flex flex-col items-center gap-4">
+              <button>
+                <FaEdit className="text-green-700" />
+              </button>
+              <button>
+                <FaTrash className="text-red-700" />
+              </button>
+            </div>
+          </div>
+        )
+        )}
+        </div>
+        }
+        
     </div>
   );
 }
