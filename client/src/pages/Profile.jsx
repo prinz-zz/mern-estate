@@ -131,7 +131,7 @@ export default function Profile() {
       
     try {
       const res = await axios.delete(`/api/listing/delete/${listingId}`);
-      setUserListings((prev) => prev.filter((listing) => listing.id !== listingId))
+      setUserListings((prev) => prev.filter((listing) => listing._id !== listingId))
       toast.success("Listing deleted Successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message);
