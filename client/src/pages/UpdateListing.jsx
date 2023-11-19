@@ -44,9 +44,9 @@ export default function UpdateListing() {
         const res = await axios.get(`/api/listing/getListing/${listingId}`);
         const data = res.data;
         console.log(data);
+        setFormData(data);
     }
     fetchListings(); 
-
   },[])
 
   //////////////
@@ -164,7 +164,7 @@ export default function UpdateListing() {
       }
       setLoading(true);
       setError(false);
-      const res = await axios.post("/api/listing/create", {
+      const res = await axios.patch(`/api/listing/update/${params.listingId}`, {
         ...formData,
         userRef: currentUser.id,
       });
