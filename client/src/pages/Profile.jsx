@@ -239,9 +239,12 @@ export default function Profile() {
               <p>{list.name}</p>
             </Link>
             <div className="flex flex-col items-center gap-4">
-              <button onClick={handleListEdit}>
-                <FaEdit className="text-green-700" />
+             <Link to={`/update-listing/${list._id}`}>
+              <button onClick={handleListEdit}>             
+                <FaEdit className="text-green-700" />                
               </button>
+              </Link>
+              
               <button onClick={()=> handleListDelete(list._id)}>
                 <FaTrash className="text-red-700" />
               </button>
