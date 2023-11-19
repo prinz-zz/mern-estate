@@ -36,7 +36,7 @@ export default function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const params = useParams();
-
+  
 
   useEffect(()=>{
     const fetchListings = async() =>{
