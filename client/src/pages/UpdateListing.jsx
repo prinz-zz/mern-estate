@@ -203,7 +203,7 @@ export default function UpdateListing() {
             placeholder="Description"
             type="textarea"
             id="description"
-            maxLength="60"
+            maxLength="500"
             minLength="10"
             required
             onChange={handleChange}
