@@ -236,7 +236,7 @@ export default function Profile() {
                 alt="listing image"
                 className="w-16 h-16 object-contain rounded-lg"
               />
-              <p>{list.name}</p>
+              <p className='ml-3'>{list.name}</p>
             </Link>
             <div className="flex flex-col items-center gap-4">
              <Link to={`/update-listing/${list._id}`}>

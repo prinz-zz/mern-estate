@@ -203,7 +203,7 @@ export default function UpdateListing() {
             placeholder="Description"
             type="textarea"
             id="description"
-            maxLength="500"
+            maxLength="1000"
             minLength="10"
             required
             onChange={handleChange}
@@ -320,7 +320,7 @@ export default function UpdateListing() {
                   type="number"
                   id="discountedPrice"
                   min="0"
-                  max="10000"
+                  max="1000000"
                   className="border border-gray p-3 rounded-xl focus:outline-none"
                   required
                   onChange={handleChange}

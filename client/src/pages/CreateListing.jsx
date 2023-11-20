@@ -193,7 +193,7 @@ export default function CreateListing() {
             placeholder="Description"
             type="textarea"
             id="description"
-            maxLength="500"
+            maxLength="1000"
             minLength="10"
             required
             onChange={handleChange}
@@ -310,7 +310,7 @@ export default function CreateListing() {
                   type="number"
                   id="discountedPrice"
                   min="0"
-                  max="10000"
+                  max="100000"
                   className="border border-gray p-3 rounded-xl focus:outline-none"
                   required
                   onChange={handleChange}
