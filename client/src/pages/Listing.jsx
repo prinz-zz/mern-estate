@@ -27,7 +27,7 @@ export default function Listing() {
   const [copied, setCopied] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [contact, setConact] = useState(false);
-  console.log(currentUser);
+  // console.log(currentUser);
   // console.log(listing?.regularPrice);
   // console.log(listing?.discountedPrice);
   // console.log(listing?.offer);
