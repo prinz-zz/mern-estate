@@ -27,9 +27,10 @@ export default function Listing() {
   const [copied, setCopied] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [contact, setConact] = useState(false);
-  console.log(listing?.regularPrice);
-  console.log(listing?.discountedPrice);
-  console.log(listing?.offer);
+  console.log(currentUser);
+  // console.log(listing?.regularPrice);
+  // console.log(listing?.discountedPrice);
+  // console.log(listing?.offer);
 
   useEffect(() => {
     try {
@@ -136,7 +137,7 @@ export default function Listing() {
                 {listing.furnished ? "Furnished" : "Unfurnished"}
               </li>
             </ul>
-            {currentUser && listing.userRef !== currentUser.id && !contact && (
+            {currentUser && listing.userRef !== currentUser._id && !contact && (
               <button
                 onClick={() => setConact(true)}
                 className="bg-slate-700 text-white uppercase hover:opacity=95 p-3 rounded-lg">

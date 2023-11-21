@@ -27,13 +27,14 @@ import {
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
-  
+
   const [file, setFile] = useState(null);
   const [filePercent, setFilePercent] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
+  console.log(currentUser._id);
 
   useEffect(() => {
     if (file) {
@@ -78,7 +79,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
       const res = await axios.put(
-        `/api/user/update/${currentUser.id}`,
+        `/api/user/update/${currentUser._id}`,
         formData
       );
       const data = await res.data;
@@ -93,7 +94,7 @@ export default function Profile() {
   const handleDelete = async (e) => {
     try {
       dispatch(deleteUserStart());
-      const res = await axios.delete(`/api/user/delete/${currentUser.id}`);
+      const res = await axios.delete(`/api/user/delete/${currentUser._id}`);
       const data = await res.data;
       dispatch(deleteUserSuccess(data));
       toast.success("User deleted successfully");
@@ -115,7 +116,7 @@ export default function Profile() {
 
   const handleShowListings = async () => {
     try {
-      const res = await axios.get(`/api/user/listings/${currentUser.id}`);
+      const res = await axios.get(`/api/user/listings/${currentUser._id}`);
       const data = await res.data;
       console.log(data);
       setUserListings(data);
@@ -124,19 +125,18 @@ export default function Profile() {
     }
   };
 
-  const handleListEdit = async () => {
-
-  }
+  const handleListEdit = async () => {};
   const handleListDelete = async (listingId) => {
-      
     try {
       const res = await axios.delete(`/api/listing/delete/${listingId}`);
-      setUserListings((prev) => prev.filter((listing) => listing._id !== listingId))
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
       toast.success("Listing deleted Successfully");
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
-  }
+  };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -219,42 +219,40 @@ export default function Profile() {
       <button onClick={handleShowListings} className="text-green-700 w-full">
         Show Listings
       </button>
-      {userListings &&
-        userListings.length > 0 &&
-        
-        <div className=''>
-          <h1 className="text-center mt-7 text-2xl font-semibold">Your Listings</h1>
-        {userListings.map((list) => (
-          <div
-            className="my-3 p-3 flex justify-between items-center border rounded-lg border-slate-300"
-            key={list._id}>
-            <Link
-              to={`/listing/${list._id}`}
-              className="flex justify-between items-center">
-              <img
-                src={list.imageUrls[0]}
-                alt="listing image"
-                className="w-16 h-16 object-contain rounded-lg"
-              />
-              <p className='ml-3'>{list.name}</p>
-            </Link>
-            <div className="flex flex-col items-center gap-4">
-             <Link to={`/update-listing/${list._id}`}>
-              <button onClick={handleListEdit}>             
-                <FaEdit className="text-green-700" />                
-              </button>
+      {userListings && userListings.length > 0 && (
+        <div className="">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((list) => (
+            <div
+              className="my-3 p-3 flex justify-between items-center border rounded-lg border-slate-300"
+              key={list._id}>
+              <Link
+                to={`/listing/${list._id}`}
+                className="flex justify-between items-center">
+                <img
+                  src={list.imageUrls[0]}
+                  alt="listing image"
+                  className="w-16 h-16 object-contain rounded-lg"
+                />
+                <p className="ml-3">{list.name}</p>
               </Link>
-              
-              <button onClick={()=> handleListDelete(list._id)}>
-                <FaTrash className="text-red-700" />
-              </button>
+              <div className="flex flex-col items-center gap-4">
+                <Link to={`/update-listing/${list._id}`}>
+                  <button onClick={handleListEdit}>
+                    <FaEdit className="text-green-700" />
+                  </button>
+                </Link>
+
+                <button onClick={() => handleListDelete(list._id)}>
+                  <FaTrash className="text-red-700" />
+                </button>
+              </div>
             </div>
-          </div>
-        )
-        )}
+          ))}
         </div>
-        }
-        
+      )}
     </div>
   );
 }

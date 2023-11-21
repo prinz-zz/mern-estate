@@ -53,7 +53,7 @@ export const signIn = async (req, res, next) => {
     if (user) {
       genTokenAndSetCookie(res, user._id);
       res.status(200).json({
-        id: user._id,
+        _id: user._id,
         username: user.username,
         email: user.email,
         avatar: user.avatar,

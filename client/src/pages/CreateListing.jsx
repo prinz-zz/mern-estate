@@ -35,7 +35,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  ///console.log(currentUser.id);
+  console.log(currentUser);
 
   //console.log(formData);
 
@@ -156,7 +156,7 @@ export default function CreateListing() {
       setError(false);
       const res = await axios.post("/api/listing/create", {
         ...formData,
-        userRef: currentUser.id,
+        userRef: currentUser._id,
       });
       const data = await res.data;
       console.log(data);
