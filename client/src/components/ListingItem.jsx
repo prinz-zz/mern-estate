@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
 
 export default function ListingItem({ listing }) {
+  console.log(listing.offer);
   return (
     <div className="bg-white shadow-md hover:shadow-lg trasition-shadow overflow-hidden rounded-lg w-full sm:w-[320px]">
       <Link to={`/listing/${listing._id}`}>
         <img
-          src={listing.imageUrls[0]}
+          src={
+            listing.imageUrls[0] ||
+            "https://images.pexels.com/photos/164558/pexels-photo-164558.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          }
           alt="listing cover"
           className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300"
         />
@@ -29,13 +33,28 @@ export default function ListingItem({ listing }) {
             {listing.offer
               ? listing.discountedPrice.toLocaleString("en-us")
               : listing.regularPrice.toLocaleString("en-us")}
-            {listing.type === "rent" && " / month"}
+            {listing.type === "rent" ? (
+              " / month"
+            ) : !listing.offer ? (
+              ""
+            ) : (
+              <span className="text-sm bg-blue-700 text-white text-center p-1 rounded-md ml-2">
+                Discount
+              </span>
+            )}
           </div>
-          <div className='flex gap-2 text-slate-700'>
-                <p>{listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : `${listing.bedrooms} Bed`}</p>
-                <p>{listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : `${listing.bathrooms} Bath`}</p>
-
-        </div>
+          <div className="flex gap-2 text-slate-700">
+            <p>
+              {listing.bedrooms > 1
+                ? `${listing.bedrooms} Beds`
+                : `${listing.bedrooms} Bed`}
+            </p>
+            <p>
+              {listing.bathrooms > 1
+                ? `${listing.bathrooms} Baths`
+                : `${listing.bathrooms} Bath`}
+            </p>
+          </div>
         </div>
       </Link>
     </div>
