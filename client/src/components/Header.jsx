@@ -31,13 +31,15 @@ export default function Header() {
   
   return (
     <header className="bg-slate-200 shadow-md">
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
+      <div className="flex justify-between items-center max-w-7xl mx-auto p-3">
+        <Link to='/'>
         <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
           <span className="text-slate-500">
             <sub>PG</sub>
           </span>
           <span className="text-slate-700"> Estates</span>
         </h1>
+        </Link>
 
         <form
           onSubmit={handleSearch}
@@ -65,11 +67,7 @@ export default function Header() {
               About
             </li>
           </Link>
-          <Link to="/profile">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              Profile
-            </li>
-          </Link>
+          
           {currentUser ? (
             <>
               <Link to="/signIn">
@@ -77,11 +75,13 @@ export default function Header() {
                   Sign Out
                 </li>
               </Link>
+              <Link to="/profile">
               <img
                 className="rounded-full h-7 w-7 object-cover"
                 src={currentUser.avatar}
                 alt="profile"
               />
+               </Link>
             </>
           ) : (
             <Link to="/signIn">

@@ -30,7 +30,7 @@ export default function Listing() {
   // console.log(currentUser);
   // console.log(listing?.regularPrice);
   // console.log(listing?.discountedPrice);
-  // console.log(listing?.offer);
+   console.log(listing);
 
   useEffect(() => {
     try {
