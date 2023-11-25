@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import Contact from "../components/contact";
+import Contact from "../components/Contact";
 import "swiper/css/bundle";
 import {
   FaBath,
